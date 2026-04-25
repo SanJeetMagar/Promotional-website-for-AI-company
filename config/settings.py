@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,14 +43,15 @@ INSTALLED_APPS = [
     'django_filters',
     'cloudinary_storage',
     'cloudinary',
-    'src.apps.account',
+    'drf_spectacular',
+    'src.apps.accounts',
     'src.apps.blog',
     'src.apps.career',
     'src.apps.contact',
     'src.apps.inquiry',
     'src.apps.porfolio',
-    'src.apps.service',
-    'src.apps.testimonial',
+    'src.apps.services',
+    'src.apps.testimonials',
     'src.apps.team'    
 ]
 
@@ -114,7 +116,9 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # Internationalization
@@ -134,3 +138,16 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "VioTech Technology Backend",
+    "DESCRIPTION": "API for VioTech Backend service",
+    "VERSION": "1.0.0",
+    "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
+}
