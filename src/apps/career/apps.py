@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class CareersConfig(AppConfig):
-    name = 'careers'
+    name = 'src.apps.career'
+    verbose_name = "Career"

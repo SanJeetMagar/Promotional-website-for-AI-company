@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class InquiryConfig(AppConfig):
-    name = 'inquiry'
+    name = 'src.apps.inquiry'
+    verbose_name = "Inquiry"

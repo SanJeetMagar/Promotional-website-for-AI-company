@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class TeamConfig(AppConfig):
-    name = 'team'
+    name = 'src.apps.team'
+    verbose_name = "Team"

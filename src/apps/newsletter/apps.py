@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class NewsletterConfig(AppConfig):
-    name = 'newsletter'
+    name = 'src.apps.newsletter'
+    verbose_name = "Newsletter"
