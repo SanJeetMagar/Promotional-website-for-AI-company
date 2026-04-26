@@ -21,6 +21,8 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
         path("schema/", SpectacularAPIView.as_view(), name="schema"),
@@ -34,4 +36,5 @@ urlpatterns = [
     path('v1/api/team/', include('src.apps.team.urls')),
     path('v1/api/contact/', include('src.apps.contact.urls')), 
     path('v1/api/testimonials/', include('src.apps.testimonials.urls')),
-]
+    path('v1/api/logo/', include('src.apps.logo.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
