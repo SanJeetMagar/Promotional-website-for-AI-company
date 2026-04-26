@@ -32,4 +32,5 @@ urlpatterns = [
     ),
     # path('v1/api/accounts/', include('src.apps.account.urls')),
     path('v1/api/team/', include('src.apps.team.urls')),
+    path('v1/api/contact/', include('src.apps.contact.urls')), 
 ]
