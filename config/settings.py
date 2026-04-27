@@ -51,7 +51,10 @@ INSTALLED_APPS = [
     'src.apps.services',
     'src.apps.testimonials',
     'src.apps.team',
-    'src.apps.logo.apps.LogoConfig'
+    'src.apps.logo.apps.LogoConfig',
+    'src.apps.common',
+    'src.apps.newsletter',
+    
 ]
 
 MIDDLEWARE = [
@@ -188,3 +191,8 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+
+
+SPECTACULAR_SETTINGS = {
+    'CACHE_SCHEMA': False,
+}

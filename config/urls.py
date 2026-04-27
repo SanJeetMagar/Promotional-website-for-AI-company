@@ -37,4 +37,10 @@ urlpatterns = [
     path('v1/api/contact/', include('src.apps.contact.urls')), 
     path('v1/api/testimonials/', include('src.apps.testimonials.urls')),
     path('v1/api/logo/', include('src.apps.logo.urls')),
+    path('v1/api/newsletter/', include('src.apps.newsletter.urls')),
+    path('v1/api/services/', include('src.apps.services.urls')),
+    # path('v1/api/portfolio/', include('src.apps.porfolio.urls')),
+    # path('v1/api/inquiry/', include('src.apps.inquiry.urls')),
+    # path('v1/api/career/', include('src.apps.career.urls')),
+    # path('v1/api/blog/', include('src.apps.blog.urls')),    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

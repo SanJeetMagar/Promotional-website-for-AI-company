@@ -1,3 +1,13 @@
-from django.shortcuts import render
+from .models import Newsletter
+from .serializers import NewsletterSerializer
+from rest_framework import generics
+from drf_spectacular.utils import extend_schema
 
-# Create your views here.
+@extend_schema(
+    request=NewsletterSerializer,
+    responses=NewsletterSerializer,
+    tags=["Newsletter"],
+)
+class NewsletterCreateView(generics.CreateAPIView):
+    queryset = Newsletter.objects.all()
+    serializer_class = NewsletterSerializer 
