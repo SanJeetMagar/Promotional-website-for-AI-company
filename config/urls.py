@@ -39,6 +39,7 @@ urlpatterns = [
     path('v1/api/logo/', include('src.apps.logo.urls')),
     path('v1/api/newsletter/', include('src.apps.newsletter.urls')),
     path('v1/api/services/', include('src.apps.services.urls')),
+    path('v1/api/product/', include('src.apps.product.urls')),
     # path('v1/api/portfolio/', include('src.apps.porfolio.urls')),
     # path('v1/api/inquiry/', include('src.apps.inquiry.urls')),
     # path('v1/api/career/', include('src.apps.career.urls')),

@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'src.apps.logo.apps.LogoConfig',
     'src.apps.common',
     'src.apps.newsletter',
+    'src.apps.about',
+    'src.apps.product',
     
 ]
 
