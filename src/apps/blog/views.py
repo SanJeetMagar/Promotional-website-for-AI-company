@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from .models import BlogPost
+from .serializers import BlogPostSerializer
+from rest_framework import generics
+from drf_spectacular.utils import extend_schema 
 
-# Create your views here.
+@extend_schema(description="List all active blog posts", tags=['Blog'])
+class BlogPostListView(generics.ListAPIView):
+    queryset = BlogPost.objects.filter(is_active=True)
+    serializer_class = BlogPostSerializer   
+
+    
