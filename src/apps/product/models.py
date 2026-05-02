@@ -89,3 +89,15 @@ class ProductFAQ(BaseModel):
         ordering = ['order']
     def __str__(self):
         return f"{self.product.name} - {self.question[:50]}"
+    
+class ProductTestimonial(BaseModel):
+    product = models.ForeignKey(Product, related_name='testimonials', on_delete=models.CASCADE)
+    author_name = models.CharField(max_length=255)
+    author_title = models.CharField(max_length=255, blank=True)
+    author_profile_image = models.ImageField(upload_to='product/testimonials/', blank=True, null=True)
+    content = models.TextField()
+    order = models.PositiveIntegerField(default=0)  
+    class Meta:
+        ordering = ['order']
+    def __str__(self):
+        return f"{self.product.name} - Testimonial by {self.author_name}"

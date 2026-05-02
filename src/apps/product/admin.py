@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import (
     Product, ProductImage, ProductFeature,
-    ProductStep, PricingPlan, PricingPlanFeature, ProductFAQ
+    ProductStep, PricingPlan, PricingPlanFeature, ProductFAQ, ProductTestimonial
 )
 
 
@@ -41,7 +41,10 @@ class PricingPlanFeatureInline(admin.TabularInline):
     extra = 1
     fields = ['description', 'order']
 
-
+class ProductTestimonialInline(admin.StackedInline):
+    model = ProductTestimonial
+    extra = 1
+    fields = ['author_name', 'author_title', 'author_profile_image', 'content', 'order']
 # ─── PricingPlan Admin ─────────────────────────────────────────────────────────
 # Separate admin page for pricing plans — with its own inline for features
 
@@ -110,6 +113,7 @@ class ProductAdmin(admin.ModelAdmin):
         ProductStepInline,
         PricingPlanInline,
         ProductFAQInline,
+        ProductTestimonialInline,   
     ]
 
     # Groups fields into labeled sections on the Product edit page

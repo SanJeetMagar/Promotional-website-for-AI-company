@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (
     Product, ProductImage, ProductFeature,
-    ProductStep, PricingPlan, PricingPlanFeature, ProductFAQ
+    ProductStep, PricingPlan, PricingPlanFeature, ProductFAQ, ProductTestimonial
 )
 
 
@@ -56,7 +56,10 @@ class ProductDropdownListSerializer(serializers.ModelSerializer):
             'dropdown_short_description', 'order',
         ]
 
-
+class ProductTestimonialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductTestimonial
+        fields = ['id', 'author_name', 'author_title', 'content', 'order', 'author_profile_image']
 class ProductDetailSerializer(serializers.ModelSerializer):
     """Heavy — for single product detail page only."""
     images = ProductImageSerializer(many=True, read_only=True)
@@ -64,6 +67,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     steps = ProductStepSerializer(many=True, read_only=True)
     pricing_plans = PricingPlanSerializer(many=True, read_only=True)
     faqs = ProductFAQSerializer(many=True, read_only=True)
+    testimonials = ProductTestimonialSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
@@ -71,5 +75,5 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             'id', 'name', 'slug', 'badge_text', 'tagline',
             'description', 'meta_title', 'meta_description',
             'is_active', 'order',
-            'images', 'features', 'steps', 'pricing_plans', 'faqs',
+            'images', 'features', 'steps', 'pricing_plans', 'faqs', 'testimonials',
         ]
