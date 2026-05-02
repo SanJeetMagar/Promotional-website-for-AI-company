@@ -8,6 +8,6 @@ class TestimonialListView(generics.ListAPIView):
     queryset = Testimonial.objects.all().order_by('-created_at')
     serializer_class = TestimonialSerializer
 
-    @extend_schema(description="Get list of testimonials", tags=['Testimonials'])
+    @extend_schema(description="Get list of testimonials", tags=['Testimonials'], summary="Display testimonials")
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
