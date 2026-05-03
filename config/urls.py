@@ -43,6 +43,6 @@ urlpatterns = [
     path('v1/api/faq/', include('src.apps.faq.urls')),
     # path('v1/api/portfolio/', include('src.apps.porfolio.urls')),
     # path('v1/api/inquiry/', include('src.apps.inquiry.urls')),
-    # path('v1/api/career/', include('src.apps.career.urls')),
+    path('v1/api/career/', include('src.apps.career.urls')),
     path('v1/api/blog/', include('src.apps.blog.urls')),    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
