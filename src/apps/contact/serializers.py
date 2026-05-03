@@ -11,3 +11,9 @@ class ContactInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactInfo
         fields = '__all__'
+
+
+# class SocialMediaLinkSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = SocialMediaLink
+#         fields = '__all__'

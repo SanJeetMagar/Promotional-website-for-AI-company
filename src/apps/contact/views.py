@@ -41,10 +41,3 @@ class ContactMessageCreateView(generics.CreateAPIView):
 
 # @extend_schema(description="Retrieve contact information", tags=['Contact'])
 # class ContactInfoView(generics.ListCreateAPIView):
-    queryset = ContactInfo.objects.all()
-    serializer_class = ContactInfoSerializer
-
-    def get_queryset(self):
-        return super().get_queryset().order_by('-created_at')
-
-    permission_classes = [AllowAny]
