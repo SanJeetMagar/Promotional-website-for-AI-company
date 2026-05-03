@@ -6,4 +6,8 @@ class FAQ(Model):
     answer = models.TextField()
 
     def __str__(self):
-        return self.question    
+        return self.question
+
+    class Meta:
+        verbose_name = 'FAQ'
+        verbose_name_plural = 'FAQs'
