@@ -1,5 +1,5 @@
-from .models import ContactMessage, ContactInfo
-from .serializers import ContactMessageSerializer, ContactInfoSerializer
+from .models import ContactMessage, ContactInfo, SocialMediaLink
+from .serializers import ContactMessageSerializer, ContactInfoSerializer, SocialMediaLinkSerializer
 from rest_framework import generics
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from drf_spectacular.utils import extend_schema
@@ -41,3 +41,7 @@ class ContactMessageCreateView(generics.CreateAPIView):
 
 # @extend_schema(description="Retrieve contact information", tags=['Contact'])
 # class ContactInfoView(generics.ListCreateAPIView):
+@extend_schema(description="Retrieve social media links", tags=['Contact'])
+class SocialMediaLinkListView(generics.ListAPIView):
+    queryset = SocialMediaLink.objects.all()
+    serializer_class = SocialMediaLinkSerializer
