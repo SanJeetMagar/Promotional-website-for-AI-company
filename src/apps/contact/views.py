@@ -39,10 +39,12 @@ class ContactMessageCreateView(generics.CreateAPIView):
             except Exception:
                 pass
 
-@extend_schema(description="Retrieve contact information", tags=['Contact'])
-class ContactInfoView(generics.RetrieveAPIView):
+# @extend_schema(description="Retrieve contact information", tags=['Contact'])
+# class ContactInfoView(generics.ListCreateAPIView):
     queryset = ContactInfo.objects.all()
     serializer_class = ContactInfoSerializer
-    def get_object(self):
-        return self.queryset.first()  # Assuming there's only one contact info entry
+
+    def get_queryset(self):
+        return super().get_queryset().order_by('-created_at')
+
     permission_classes = [AllowAny]
