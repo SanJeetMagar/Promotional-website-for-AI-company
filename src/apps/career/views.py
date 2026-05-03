@@ -4,7 +4,7 @@ from rest_framework import generics
 from drf_spectacular.utils import extend_schema
 
 
-@extend_schema(description="List all career opportunities", tags=['Career'])
+@extend_schema(description="List all career opportunities", tags=['Career'],summary="List of career opportunities")
 class CareerListView(generics.ListAPIView):
     queryset = Career.objects.all()
     serializer_class = CareerSerializer

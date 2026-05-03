@@ -21,7 +21,7 @@ class ContactUserThrottle(UserRateThrottle):
     scope = 'contact_user'
 
 
-@extend_schema(description="Create a new contact message", tags=['Contact'])
+@extend_schema(description="Create a new contact message", tags=['Contact'],summary="Submit a contact message")
 class ContactMessageCreateView(generics.CreateAPIView):
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer 
@@ -41,7 +41,7 @@ class ContactMessageCreateView(generics.CreateAPIView):
 
 # @extend_schema(description="Retrieve contact information", tags=['Contact'])
 # class ContactInfoView(generics.ListCreateAPIView):
-@extend_schema(description="Retrieve social media links", tags=['Contact'])
+@extend_schema(description="Retrieve social media links", tags=['Contact'],summary="List of social media links")
 class SocialMediaLinkListView(generics.ListAPIView):
     queryset = SocialMediaLink.objects.all()
     serializer_class = SocialMediaLinkSerializer

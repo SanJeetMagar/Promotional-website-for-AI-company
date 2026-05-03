@@ -4,7 +4,7 @@ from rest_framework import generics
 from drf_spectacular.utils import extend_schema
 
 
-@extend_schema(description="Get list of logos", tags=['Logo'])    
+@extend_schema(summary="List of logos",description="Get list of logos", tags=['Logo'])    
 class LogoListView(generics.ListAPIView):
     queryset = Logo.objects.all()
     serializer_class = LogoSerializer

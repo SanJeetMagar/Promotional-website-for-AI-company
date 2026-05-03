@@ -10,6 +10,8 @@ from drf_spectacular.utils import extend_schema
     request=NewsletterSerializer,
     responses=NewsletterSerializer,
     tags=["Newsletter"],
+    summary="Subscribe to newsletter",
+    description="Create a new newsletter subscription. A welcome email will be sent to the provided email address."
 )
 class NewsletterCreateView(generics.CreateAPIView):
     queryset = Newsletter.objects.all()
