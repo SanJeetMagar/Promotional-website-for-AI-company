@@ -15,3 +15,15 @@ class BlogPost(BaseModel):
 
     def __str__(self):
         return self.title
+    
+
+class Comment(BaseModel):
+    blog_post = models.ForeignKey(BlogPost, related_name='comments', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    content = models.TextField()
+    published_date = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'Comment by {self.name} on {self.blog_post.title}'

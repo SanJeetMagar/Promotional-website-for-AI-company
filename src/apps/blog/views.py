@@ -8,4 +8,3 @@ class BlogPostListView(generics.ListAPIView):
     queryset = BlogPost.objects.filter(is_active=True)
     serializer_class = BlogPostSerializer   
 
-    
