@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "src.apps.career",
     "src.apps.contact",
     "src.apps.inquiry",
-    "src.apps.porfolio",
+    "src.apps.portfolio",
     "src.apps.services",
     "src.apps.testimonials",
     "src.apps.team",
