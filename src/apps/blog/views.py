@@ -17,17 +17,12 @@ class BlogPostListView(generics.ListAPIView):
 class BlogPostDetailView(generics.RetrieveAPIView):
     serializer_class = BlogPostDetailSerializer
 
-    def get_object(self):
+    def get_object(self):   
         return get_object_or_404(
-            BlogPost,
+            BlogPost.objects.prefetch_related('comments'),
             slug=self.kwargs['slug'],
             status=BlogStatus.PUBLISHED
-        )
-    def get_queryset(self):
-        return BlogPost.objects.filter(
-        status=BlogStatus.PUBLISHED
-    ).prefetch_related('comments')
-
+    )
 @extend_schema(tags=['Comment'], summary="Post a comment")
 class CommentCreateView(generics.CreateAPIView):
     serializer_class = CommentSerializer
