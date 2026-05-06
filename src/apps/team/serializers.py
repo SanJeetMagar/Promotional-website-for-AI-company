@@ -9,5 +9,5 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 class CEOMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = CEOMessage
-        fields = '__all__'
+        fields = ['id', 'ceo_name', 'ceo_title', 'ceo_photo', 'quote', 'body_text', 'tagline', 'sub_tagline']
                 
