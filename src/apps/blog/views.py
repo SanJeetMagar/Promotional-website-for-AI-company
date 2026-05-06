@@ -8,9 +8,10 @@ from .serializers import BlogPostListSerializer, BlogPostDetailSerializer, Comme
 @extend_schema(tags=['Blog'], summary="List published blog posts")
 class BlogPostListView(generics.ListAPIView):
     serializer_class = BlogPostListSerializer
-
     def get_queryset(self):
-        return BlogPost.objects.filter(status=BlogStatus.PUBLISHED)
+        return BlogPost.objects.filter(
+            status=BlogStatus.PUBLISHED
+        ).prefetch_related('comments')
 
 
 @extend_schema(tags=['Blog'], summary="Get blog post details")
