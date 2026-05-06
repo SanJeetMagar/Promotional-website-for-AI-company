@@ -4,4 +4,4 @@ from rest_framework import serializers
 class ExpertiseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expertise
-        fields = '__all__'      
+        fields = ['id', 'name', 'description', 'logo']     

@@ -9,5 +9,6 @@ from drf_spectacular.utils import extend_schema
     tags=["Services"],
 )
 class ExpertiseListView(generics.ListAPIView):
-    queryset = Expertise.objects.all()
+    def get_queryset(self):
+        return Expertise.objects.filter(is_active=True)       
     serializer_class = ExpertiseSerializer  
