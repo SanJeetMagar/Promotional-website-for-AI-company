@@ -5,6 +5,7 @@ class TeamMember(BaseModel):
     position = models.CharField(max_length=255)
     photo = models.ImageField(upload_to='team_photos/')
     bio = models.TextField()
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
