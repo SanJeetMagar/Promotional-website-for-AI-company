@@ -3,9 +3,26 @@ from .models import BlogPost, Comment
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'published_date', 'is_active')
-    prepopulated_fields = {'slug': ('title',)}
-    ordering = ('order',)   
+    list_display = ['title', 'author', 'published_date', 'status']
+    list_filter = ['status']
+    search_fields = ['title', 'author', 'content']
+    readonly_fields = ['published_date', 'slug']
+    exclude = ['slug']  # ← remove slug from form entirely
+    actions = ['publish_posts', 'archive_posts']
+
+    def publish_posts(self, request, queryset):
+        for post in queryset:
+            post.publish()
+    publish_posts.short_description = 'Publish selected posts'
+
+    def archive_posts(self, request, queryset):
+        for post in queryset:
+            post.archive()
+    archive_posts.short_description = 'Archive selected posts'
 
 
-    
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):   
+    list_display = ['name', 'blog_post', 'published_date', 'is_active']
+    list_filter = ['is_active']
+    search_fields = ['name', 'content']

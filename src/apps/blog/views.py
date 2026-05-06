@@ -1,14 +1,41 @@
-from .models import BlogPost, Comment
-from .serializers import BlogPostSerializer, CommentSerializer
 from rest_framework import generics
-from drf_spectacular.utils import extend_schema 
+from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
+from .models import BlogPost, Comment, BlogStatus
+from .serializers import BlogPostListSerializer, BlogPostDetailSerializer, CommentSerializer
 
-@extend_schema(description="List all active blog posts", tags=['Blog'],summary="List of blog posts")
+
+@extend_schema(tags=['Blog'], summary="List published blog posts")
 class BlogPostListView(generics.ListAPIView):
-    queryset = BlogPost.objects.filter(is_active=True)
-    serializer_class = BlogPostSerializer   
+    serializer_class = BlogPostListSerializer
 
-@extend_schema(description="Post a new comment", tags=['Comment'],summary="Create a comment")
+    def get_queryset(self):
+        return BlogPost.objects.filter(status=BlogStatus.PUBLISHED)
+
+
+@extend_schema(tags=['Blog'], summary="Get blog post details")
+class BlogPostDetailView(generics.RetrieveAPIView):
+    serializer_class = BlogPostDetailSerializer
+
+    def get_object(self):
+        return get_object_or_404(
+            BlogPost,
+            slug=self.kwargs['slug'],
+            status=BlogStatus.PUBLISHED
+        )
+    def get_queryset(self):
+        return BlogPost.objects.filter(
+        status=BlogStatus.PUBLISHED
+    ).prefetch_related('comments')
+
+@extend_schema(tags=['Comment'], summary="Post a comment")
 class CommentCreateView(generics.CreateAPIView):
-    serializer_class = CommentSerializer    
-    
+    serializer_class = CommentSerializer
+
+    def perform_create(self, serializer):
+        post = get_object_or_404(
+            BlogPost,
+            slug=self.kwargs['slug'],
+            status=BlogStatus.PUBLISHED
+        )
+        serializer.save(blog_post=post)
