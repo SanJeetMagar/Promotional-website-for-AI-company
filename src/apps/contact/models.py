@@ -1,5 +1,5 @@
 from django.db import models
-
+from src.apps.common.models import BaseModel
 class ContactMessage(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -21,7 +21,7 @@ class ContactInfo(models.Model):
         return self.address
     
 
-class SocialMediaLink(models.Model):
+class SocialMediaLink(BaseModel):
     platform = models.CharField(max_length=255)
     url = models.URLField()
     created_at = models.DateTimeField(auto_now_add=True)
