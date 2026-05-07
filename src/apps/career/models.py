@@ -1,12 +1,23 @@
 from django.db import models
 from src.apps.common.models import BaseModel
 from django.utils import timezone
+from django.utils.text import slugify
 class Tag(BaseModel):
     name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
     
+
+def generate_unique_slug(model_class, title):
+    base_slug = slugify(title)
+    slug = base_slug
+    counter = 1
+    # Keep incrementing until we find a slug that doesn't exist
+    while model_class.objects.filter(slug=slug).exists():
+        slug = f"{base_slug}-{counter}"
+        counter += 1
+    return slug  
 class EmploymentType(models.TextChoices):
     FULL_TIME = 'Full-time', 'Full-time'
     PART_TIME = 'Part-time', 'Part-time'
@@ -25,6 +36,7 @@ class WorkArrangement(models.TextChoices):
     HYBRID = 'Hybrid', 'Hybrid'
 class JobPosting(BaseModel):
     title = models.CharField(max_length=255)
+    slug
     location = models.CharField(max_length=255, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
     description = models.TextField()
