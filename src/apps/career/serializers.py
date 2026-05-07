@@ -12,7 +12,7 @@ class JobPostingListSerializer(serializers.ModelSerializer):
         model = JobPosting
         fields = ['id', 'title', 'slug', 'location', 'tags', 'employment_type', 'work_arrangement', 'status']
 class JobPostingDetailSerializer(serializers.ModelSerializer):
-    tag = serializers.StringRelatedField(many=True)
+    tags = serializers.StringRelatedField(many=True)
     class Meta:
         model = JobPosting
         fields = ['id', 'title', 'slug', 'location', 'tags', 'description', 'deadline', 'seat_openings', 'required_skills', 'benefits', 'how_to_apply', 'employment_type', 'work_arrangement', 'status']
