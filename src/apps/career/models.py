@@ -1,23 +1,12 @@
 from django.db import models
 from src.apps.common.models import BaseModel
 from django.utils import timezone
-from django.utils.text import slugify
+from src.apps.common.slug import generate_unique_slug
 class Tag(BaseModel):
     name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
-    
-
-def generate_unique_slug(model_class, title):
-    base_slug = slugify(title)
-    slug = base_slug
-    counter = 1
-    # Keep incrementing until we find a slug that doesn't exist
-    while model_class.objects.filter(slug=slug).exists():
-        slug = f"{base_slug}-{counter}"
-        counter += 1
-    return slug  
 class EmploymentType(models.TextChoices):
     FULL_TIME = 'Full-time', 'Full-time'
     PART_TIME = 'Part-time', 'Part-time'
@@ -36,7 +25,7 @@ class WorkArrangement(models.TextChoices):
     HYBRID = 'Hybrid', 'Hybrid'
 class JobPosting(BaseModel):
     title = models.CharField(max_length=255)
-    slug
+    slug = models.SlugField(unique=True)
     location = models.CharField(max_length=255, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
     description = models.TextField()
@@ -48,6 +37,11 @@ class JobPosting(BaseModel):
     employment_type = models.CharField(max_length=50, blank=True, choices=EmploymentType.choices, default=EmploymentType.FULL_TIME)
     work_arrangement = models.CharField(max_length=50, blank=True, choices=WorkArrangement.choices, default=WorkArrangement.ON_SITE)
     status = models.CharField(max_length=50, choices=JobStatus.choices, default=JobStatus.DRAFT)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = generate_unique_slug(JobPosting, self.title)
+        super().save(*args, **kwargs)
     def __str__(self):
         return self.title
 
