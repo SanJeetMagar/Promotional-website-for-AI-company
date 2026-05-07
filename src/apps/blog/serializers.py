@@ -5,7 +5,7 @@ from .models import BlogPost, Comment
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'name', 'content', 'published_date']
+        fields = ['id', 'name', 'content','image', 'published_date']
 
 
 class BlogPostListSerializer(serializers.ModelSerializer):
@@ -16,7 +16,7 @@ class BlogPostListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlogPost
-        fields = ['id', 'title', 'slug', 'author', 'published_date', 'preview']
+        fields = ['id', 'title', 'slug', 'author', 'image', 'published_date', 'preview']
 
 
 class BlogPostDetailSerializer(serializers.ModelSerializer):
@@ -24,4 +24,4 @@ class BlogPostDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlogPost
-        fields = ['id', 'title', 'slug', 'author', 'content', 'published_date', 'comments']
+        fields = ['id', 'title', 'slug', 'author', 'image', 'content', 'published_date', 'comments']
