@@ -5,6 +5,9 @@ class TeamMember(BaseModel):
     position = models.CharField(max_length=255)
     photo = models.ImageField(upload_to='team_photos/')
     bio = models.TextField()
+    linkedin_url = models.URLField(blank=True)
+    github_url = models.URLField(blank=True)
+    twitter_url = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
