@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from django.utils.text import slugify
+from src.apps.common.slug import generate_unique_slug
 from src.apps.common.models import BaseModel
 
 
@@ -8,18 +8,6 @@ class BlogStatus(models.TextChoices):
     DRAFT = 'draft', 'Draft'
     PUBLISHED = 'published', 'Published'
     ARCHIVED = 'archived', 'Archived'
-
-
-def generate_unique_slug(model_class, title):
-    base_slug = slugify(title)
-    slug = base_slug
-    counter = 1
-    # Keep incrementing until we find a slug that doesn't exist
-    while model_class.objects.filter(slug=slug).exists():
-        slug = f"{base_slug}-{counter}"
-        counter += 1
-    return slug
-
 
 class BlogPost(BaseModel):
     title = models.CharField(max_length=255)
