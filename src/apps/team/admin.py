@@ -3,7 +3,7 @@ from .models import TeamMember, CEOMessage
 
 @admin.register(TeamMember)
 class TeamMemberAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'position')
+    list_display = ('id', 'name', 'position','order')
     search_fields = ('name', 'position')
 
 @admin.register(CEOMessage)

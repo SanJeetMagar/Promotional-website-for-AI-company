@@ -4,7 +4,7 @@ from .models import TeamMember, CEOMessage
 class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamMember
-        fields = ['id', 'name', 'position', 'photo', 'bio', 'linkedin_url', 'github_url', 'twitter_url']       
+        fields = ['id', 'name', 'position', 'photo', 'bio', 'linkedin_url', 'github_url', 'twitter_url', 'order']       
 
 class CEOMessageSerializer(serializers.ModelSerializer):
     class Meta:
