@@ -28,6 +28,7 @@ class BlogPost(BaseModel):
     content = models.TextField()
     published_date = models.DateTimeField(null=True, blank=True)
     order = models.PositiveIntegerField(default=0)
+    image = models.ImageField(upload_to='blog_images/', null=True, blank=True)
     status = models.CharField(
         max_length=20,
         choices=BlogStatus.choices,
@@ -68,6 +69,7 @@ class Comment(BaseModel):
     name = models.CharField(max_length=255)
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to='comment_images/', null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
