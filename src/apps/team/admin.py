@@ -8,4 +8,4 @@ class TeamMemberAdmin(admin.ModelAdmin):
 
 @admin.register(CEOMessage)
 class CEOMessageAdmin(admin.ModelAdmin):
-    list_display = ('id','is_active')
+    list_display = ('id', 'ceo_name', 'is_active')
