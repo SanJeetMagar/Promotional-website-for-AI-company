@@ -21,7 +21,15 @@ class BlogPostListSerializer(serializers.ModelSerializer):
 
 class BlogPostDetailSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
+    related_posts = serializers.SerializerMethodField()
+
+    def get_related_posts(self, obj):
+        related_posts = BlogPost.objects.filter(
+            tags__in=obj.tags.all(),
+            status='published'
+        ).exclude(id=obj.id).distinct()[:3]
+        return BlogPostListSerializer(related_posts, many=True).data
 
     class Meta:
         model = BlogPost
-        fields = ['id', 'title', 'slug', 'author', 'image', 'content', 'published_date', 'comments']
+        fields = ['id', 'title', 'slug', 'author', 'image', 'content', 'published_date', 'comments', 'related_posts'    ]
