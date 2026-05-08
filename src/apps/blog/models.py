@@ -9,6 +9,11 @@ class BlogStatus(models.TextChoices):
     PUBLISHED = 'published', 'Published'
     ARCHIVED = 'archived', 'Archived'
 
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
 class BlogPost(BaseModel):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
@@ -23,7 +28,7 @@ class BlogPost(BaseModel):
         choices=BlogStatus.choices,
         default=BlogStatus.DRAFT
     )
-
+    tags = models.ManyToManyField(Tag, related_name='blog_posts', blank=True)   
     class Meta:
         ordering = ['order', 'published_date']
 
