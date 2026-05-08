@@ -17,6 +17,7 @@ class BlogPost(BaseModel):
     published_date = models.DateTimeField(null=True, blank=True)
     order = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='blog_images/', null=True, blank=True)
+    is_featured = models.BooleanField(default=False)
     status = models.CharField(
         max_length=20,
         choices=BlogStatus.choices,
