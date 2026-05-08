@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CV, JobPosting
+from .models import CV, JobPosting, Tag
 
 @admin.register(JobPosting)
 class JobPostingAdmin(admin.ModelAdmin):    
@@ -19,4 +19,7 @@ class CVAdmin(admin.ModelAdmin):
     
     def has_change_permission(self, request, obj=None):
         return False
-    
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
