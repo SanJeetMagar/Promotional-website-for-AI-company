@@ -19,5 +19,9 @@ class JobPostingDetailView(generics.RetrieveAPIView):
 class CVCreateView(generics.CreateAPIView):
     serializer_class = CVSerializer
     def perform_create(self, serializer):
-        post = get_object_or_404(JobPosting, slug=self.kwargs['slug'], status='published')
-        serializer.save(job=post)
+        slug = self.kwargs.get('slug')
+        if slug:
+            post = get_object_or_404(JobPosting, slug=slug, status='published')
+            serializer.save(job=post)
+        else:
+            serializer.save()  # general CV, no job

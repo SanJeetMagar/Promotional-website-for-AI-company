@@ -5,4 +5,5 @@ urlpatterns = [
     path('jobs/', JobPostingListView.as_view(), name='job-list'),
     path('jobs/<slug:slug>/', JobPostingDetailView.as_view(), name='job-detail'),
     path('cv/', CVCreateView.as_view(), name='cv-create'),
+    path('jobs/<slug:slug>/cv/', CVCreateView.as_view(), name='cv-create-for-job'),
 ]
