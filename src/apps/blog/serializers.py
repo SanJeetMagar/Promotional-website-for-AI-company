@@ -6,7 +6,9 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'name', 'content','image', 'published_date']
-
+        extra_kwargs = {
+            'content': {'required': True,'allow_blank': False},
+        }
 
 class BlogPostListSerializer(serializers.ModelSerializer):
     preview = serializers.SerializerMethodField()
@@ -20,7 +22,9 @@ class BlogPostListSerializer(serializers.ModelSerializer):
 
 
 class BlogPostDetailSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True, read_only=True)
+    comments = serializers.SerializerMethodField()
+    def get_comments(self, obj):
+        return CommentSerializer(obj.comments.filter(is_active=True), many=True).data
     related_posts = serializers.SerializerMethodField()
 
     def get_related_posts(self, obj):
