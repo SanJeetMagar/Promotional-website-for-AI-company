@@ -12,6 +12,11 @@ class JobPostingAdmin(admin.ModelAdmin):
 class CVAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'email', 'phone_number', 'years_of_experience', 'job')
     search_fields = ('full_name', 'email', 'phone_number')
-    list_filter = ('job',)  
-
+    list_filter = ('job',)
+    
+    def has_add_permission(self, request):
+        return False
+    
+    def has_change_permission(self, request, obj=None):
+        return False
     
