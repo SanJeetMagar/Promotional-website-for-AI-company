@@ -12,11 +12,20 @@ class CVSerializer(serializers.ModelSerializer):
             'job': {'read_only': True}
         }
     def validate(self, data):
-        if data.get('job') is None:
+        slug = self.context['view'].kwargs.get('slug')
+        
+        if slug:  # applying to specific job
+            job = JobPosting.objects.filter(slug=slug, status='published').first()
+            if job and CV.objects.filter(email=data['email'], job=job).exists():
+                raise serializers.ValidationError(
+                    "You have already applied to this job."
+                )
+        else:  # general CV
             if CV.objects.filter(email=data['email'], job=None).exists():
                 raise serializers.ValidationError(
                     "You have already submitted a general CV."
                 )
+        
         return data
 class JobPostingListSerializer(serializers.ModelSerializer):
     class Meta:
