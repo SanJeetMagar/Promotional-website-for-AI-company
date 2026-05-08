@@ -3,6 +3,8 @@ from rest_framework import serializers
 
 
 class CVSerializer(serializers.ModelSerializer):
+    job = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = CV
         fields = ['id', 'full_name', 'email', 'phone_number', 'years_of_experience', 'linkedin_profile', 'github_profile', 'portfolio_link', 'resume_file', 'short_note', 'job']  # add job here
