@@ -12,7 +12,7 @@ class BlogPostListView(APIView):
     def get(self, request):
         posts = BlogPost.objects.filter(status=BlogStatus.PUBLISHED).prefetch_related('tags')
         featured_posts = posts.filter(is_featured=True)[:5]
-        latest_posts = posts.order_by('-published_date')[:10]      
+        latest_posts = posts.filter(is_featured=False).order_by('-published_date')[:10]
         return Response(
         {
             # 'all_posts': BlogPostListSerializer(posts, many=True).data,
