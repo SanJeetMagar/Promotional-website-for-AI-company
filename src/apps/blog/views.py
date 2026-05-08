@@ -15,7 +15,7 @@ class BlogPostListView(APIView):
         latest_posts = posts.order_by('-published_date')[:10]      
         return Response(
         {
-            'all_posts': BlogPostListSerializer(posts, many=True).data,
+            # 'all_posts': BlogPostListSerializer(posts, many=True).data,
             'featured': BlogPostListSerializer(featured_posts, many=True).data,
             'latest': BlogPostListSerializer(latest_posts, many=True).data
         })
