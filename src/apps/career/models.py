@@ -62,7 +62,9 @@ class CV(BaseModel):
         blank=True,  # optional - can submit without specific job
         related_name='applications'
     )
-        
+    class Meta:
+        unique_together = ('email', 'job')  # prevent multiple applications to same job with same email
+
     def __str__(self):
         return self.full_name
     

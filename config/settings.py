@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "src.apps.services",
     "src.apps.testimonials",
     "src.apps.team",
-    "src.apps.logo.apps.LogoConfig",
+    "src.apps.logo",
     "src.apps.common",
     "src.apps.newsletter",
     "src.apps.about",

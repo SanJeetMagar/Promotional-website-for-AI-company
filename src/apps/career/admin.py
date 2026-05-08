@@ -1,8 +1,17 @@
 from django.contrib import admin
-from .models import Career
+from .models import CV, JobPosting
 
-@admin.register(Career)
-class CareerAdmin(admin.ModelAdmin):
-    list_display = ('title', 'created_at')
-    search_fields = ('title',)
-    list_filter = ('created_at',)
+@admin.register(JobPosting)
+class JobPostingAdmin(admin.ModelAdmin):    
+    list_display = ('title', 'location', 'employment_type', 'work_arrangement', 'status')
+    prepopulated_fields = {'slug': ('title',)}  # auto-generate slug from title
+    list_filter = ('status', 'employment_type', 'work_arrangement')
+    search_fields = ('title', 'location', 'description')
+
+@admin.register(CV)
+class CVAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'email', 'phone_number', 'years_of_experience', 'job')
+    search_fields = ('full_name', 'email', 'phone_number')
+    list_filter = ('job',)  
+
+    
