@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import BlogPost, Comment
+from .models import BlogPost, Comment, BlogStatus
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -26,7 +26,7 @@ class BlogPostDetailSerializer(serializers.ModelSerializer):
     def get_related_posts(self, obj):
         related_posts = BlogPost.objects.filter(
             tags__in=obj.tags.all(),
-            status='published'
+            status= BlogStatus.PUBLISHED
         ).exclude(id=obj.id).distinct()[:3]
         return BlogPostListSerializer(related_posts, many=True).data
 
