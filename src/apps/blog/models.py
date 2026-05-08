@@ -9,7 +9,7 @@ class BlogStatus(models.TextChoices):
     PUBLISHED = 'published', 'Published'
     ARCHIVED = 'archived', 'Archived'
 
-class Tag(models.Model):
+class Tag(BaseModel):
     name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
