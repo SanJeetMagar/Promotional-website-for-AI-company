@@ -29,7 +29,7 @@ class BlogPostListSerializer(serializers.ModelSerializer):
 class BlogPostDetailSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     def get_comments(self, obj):
-        return CommentSerializer(obj.comments.filter(is_active=True), many=True).data
+        return CommentSerializer(obj.comments.filter(is_active=True), many=True, context=self.context).data
 
     related_posts = serializers.SerializerMethodField()
 
@@ -38,7 +38,7 @@ class BlogPostDetailSerializer(serializers.ModelSerializer):
             tags__in=obj.tags.all(),
             status= BlogStatus.PUBLISHED
         ).exclude(id=obj.id).distinct()[:3]
-        return BlogPostListSerializer(related_posts, many=True).data
+        return BlogPostListSerializer(related_posts, many=True, context={'request': self.context.get('request')}).data
 
     class Meta:
         model = BlogPost
