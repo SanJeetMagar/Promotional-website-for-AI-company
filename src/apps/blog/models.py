@@ -68,3 +68,31 @@ class Comment(BaseModel):
 
     def __str__(self):
         return f'Comment by {self.name} on post {self.blog_post_id}'
+    
+class BlogImage(BaseModel):
+    blog_post = models.ForeignKey(
+        BlogPost,
+        related_name='images',
+        on_delete=models.CASCADE
+    )
+    caption = models.CharField(max_length=255, blank=True)
+    image = models.ImageField(upload_to='blog_images/')
+    order = models.PositiveIntegerField(default=0)
+    class Meta:
+        ordering = ['id']  # Ensure images are ordered by upload time
+    
+    def __str__(self):
+        return f'Image for post {self.blog_post_id}'
+class KeyTakeaway(BaseModel):
+    blog_post = models.ForeignKey(
+        BlogPost,
+        related_name='key_takeaways',
+        on_delete=models.CASCADE
+    )
+    content = models.CharField(max_length=255)
+    order = models.PositiveIntegerField(default=0)
+    class Meta:
+        ordering = ['order']  # Ensure takeaways are ordered by creation time
+    def __str__(self):
+        return f'Key Takeaway for post {self.blog_post_id}'
+    
