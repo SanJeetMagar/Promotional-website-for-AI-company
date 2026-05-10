@@ -1,18 +1,17 @@
 from django.contrib import admin
 from .models import BlogPost, Comment, Tag,KeyTakeaway, BlogImage
 
-@admin.register(KeyTakeaway)
-class KeyTakeawayAdmin(admin.ModelAdmin):
-    list_display = ['content', 'blog_post']
-    search_fields = ['content'] 
 
-@admin.register(BlogImage)
-class BlogImageAdmin(admin.ModelAdmin):
-    list_display = ['blog_post', 'caption', 'order']
-    search_fields = ['caption']
+class KeyTakeawayInline(admin.TabularInline):
+    model = KeyTakeaway
+    extra = 3  # shows 3 empty forms by default
+class BlogImageInline(admin.TabularInline):
+    model = BlogImage
+    extra = 1
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
+    inlines = [KeyTakeawayInline, BlogImageInline]
     list_display = ['title', 'author', 'published_date', 'status', 'is_featured']
     list_filter = ['status', 'is_featured', 'published_date']
     search_fields = ['title', 'author', 'content']
