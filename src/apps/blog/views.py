@@ -16,8 +16,8 @@ class BlogPostListView(APIView):
         return Response(
         {
             # 'all_posts': BlogPostListSerializer(posts, many=True).data,
-            'featured': BlogPostListSerializer(featured_posts, many=True).data,
-            'latest': BlogPostListSerializer(latest_posts, many=True).data
+            'featured': BlogPostListSerializer(featured_posts, many=True, context={'request': request}).data,
+            'latest': BlogPostListSerializer(latest_posts, many=True, context={'request': request}).data
         })
 
 @extend_schema(tags=['Blog'], summary="Get blog post details")
