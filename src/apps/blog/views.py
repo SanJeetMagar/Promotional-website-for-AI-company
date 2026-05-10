@@ -26,7 +26,7 @@ class BlogPostDetailView(generics.RetrieveAPIView):
 
     def get_object(self):   
         return get_object_or_404(
-            BlogPost.objects.prefetch_related('comments', 'tags', 'key_takeaways', 'images'),
+            BlogPost.objects.prefetch_related('comments', 'tags', 'key_takeaways', 'images', 'tags'),
             slug=self.kwargs['slug'],
             status=BlogStatus.PUBLISHED
     )
