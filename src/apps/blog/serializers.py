@@ -30,7 +30,7 @@ class BlogPostDetailSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     def get_comments(self, obj):
         return CommentSerializer(obj.comments.filter(is_active=True), many=True).data
-    read_time = serializers.SerializerMethodField()
+
     related_posts = serializers.SerializerMethodField()
 
     def get_related_posts(self, obj):
