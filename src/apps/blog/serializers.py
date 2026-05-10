@@ -1,7 +1,6 @@
 import math
 from rest_framework import serializers
-from .models import BlogPost, Comment, BlogStatus, KeyTakeaway, BlogImage
-
+from .models import BlogPost, Comment, BlogStatus, KeyTakeaway, BlogImage, Tag
 class KeyTakeawaySerializer(serializers.ModelSerializer):
     class Meta:
         model = KeyTakeaway
@@ -19,8 +18,14 @@ class CommentSerializer(serializers.ModelSerializer):
             'content': {'required': True,'allow_blank': False},
         }
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['id', 'name']
+
 class BlogPostListSerializer(serializers.ModelSerializer):
     preview = serializers.SerializerMethodField()
+    tags = TagSerializer(many=True, read_only=True)
 
     def get_preview(self, obj):
         return obj.content[:150]
@@ -31,7 +36,7 @@ class BlogPostListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlogPost
-        fields = ['id', 'title', 'slug', 'author', 'image', 'published_date', 'read_time','preview']
+        fields = ['id', 'title', 'slug', 'author', 'image', 'published_date', 'read_time','preview', 'tags']
 
 
 class BlogPostDetailSerializer(serializers.ModelSerializer):
