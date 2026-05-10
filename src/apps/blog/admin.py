@@ -1,5 +1,15 @@
 from django.contrib import admin
-from .models import BlogPost, Comment, Tag
+from .models import BlogPost, Comment, Tag,KeyTakeaway, BlogImage
+
+@admin.register(KeyTakeaway)
+class KeyTakeawayAdmin(admin.ModelAdmin):
+    list_display = ['content', 'blog_post']
+    search_fields = ['content'] 
+
+@admin.register(BlogImage)
+class BlogImageAdmin(admin.ModelAdmin):
+    list_display = ['blog_post', 'caption', 'order']
+    search_fields = ['caption']
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
