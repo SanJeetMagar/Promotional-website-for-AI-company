@@ -54,6 +54,7 @@ class BlogPostDetailSerializer(serializers.ModelSerializer):
         return BlogPostListSerializer(related_posts, many=True, context={'request': self.context.get('request')}).data
     key_takeaways = KeyTakeawaySerializer(many=True, read_only=True)
     images = BlogImageSerializer(many=True, read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
     class Meta:
         model = BlogPost
-        fields = ['id', 'title', 'slug', 'author', 'image', 'content', 'published_date', 'comments','key_takeaways', 'images', 'related_posts'    ]
+        fields = ['id', 'title', 'slug', 'author', 'image', 'content','tags', 'published_date', 'comments','key_takeaways', 'images', 'related_posts'    ]
