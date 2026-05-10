@@ -16,10 +16,14 @@ class BlogPostListSerializer(serializers.ModelSerializer):
 
     def get_preview(self, obj):
         return obj.content[:150]
+    read_time = serializers.SerializerMethodField()
+    def get_read_time(self, obj):
+        words = len(obj.content.split())
+        return math.ceil(words / 200)
 
     class Meta:
         model = BlogPost
-        fields = ['id', 'title', 'slug', 'author', 'image', 'published_date', 'preview']
+        fields = ['id', 'title', 'slug', 'author', 'image', 'published_date', 'read_time','preview']
 
 
 class BlogPostDetailSerializer(serializers.ModelSerializer):
@@ -27,9 +31,6 @@ class BlogPostDetailSerializer(serializers.ModelSerializer):
     def get_comments(self, obj):
         return CommentSerializer(obj.comments.filter(is_active=True), many=True).data
     read_time = serializers.SerializerMethodField()
-    def get_read_time(self, obj):
-        words = len(obj.content.split())
-        return math.ceil(words / 200)
     related_posts = serializers.SerializerMethodField()
 
     def get_related_posts(self, obj):
@@ -41,4 +42,4 @@ class BlogPostDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlogPost
-        fields = ['id', 'title', 'slug', 'author', 'image', 'content','read_time', 'published_date', 'comments', 'related_posts'    ]
+        fields = ['id', 'title', 'slug', 'author', 'image', 'content', 'published_date', 'comments', 'related_posts'    ]
