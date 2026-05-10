@@ -10,7 +10,7 @@ from rest_framework import status
 @extend_schema(tags=['Blog'], summary="List published blog posts")
 class BlogPostListView(APIView):
     def get(self, request):
-        posts = BlogPost.objects.filter(status=BlogStatus.PUBLISHED)
+        posts = BlogPost.objects.filter(status=BlogStatus.PUBLISHED).prefetch_related('tags')
         featured_posts = posts.filter(is_featured=True)[:5]
         latest_posts = posts.filter(is_featured=False).order_by('-published_date')[:10]
         return Response(
