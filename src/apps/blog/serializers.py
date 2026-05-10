@@ -1,8 +1,16 @@
 import math
 from rest_framework import serializers
-from .models import BlogPost, Comment, BlogStatus
+from .models import BlogPost, Comment, BlogStatus, KeyTakeaway, BlogImage
 
+class KeyTakeawaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KeyTakeaway
+        fields = ['id', 'content']
 
+class BlogImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogImage
+        fields = ['id', 'caption', 'image', 'order']
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
@@ -39,7 +47,8 @@ class BlogPostDetailSerializer(serializers.ModelSerializer):
             status= BlogStatus.PUBLISHED
         ).exclude(id=obj.id).distinct()[:3]
         return BlogPostListSerializer(related_posts, many=True, context={'request': self.context.get('request')}).data
-
+    key_takeaways = KeyTakeawaySerializer(many=True, read_only=True)
+    images = BlogImageSerializer(many=True, read_only=True)
     class Meta:
         model = BlogPost
-        fields = ['id', 'title', 'slug', 'author', 'image', 'content', 'published_date', 'comments', 'related_posts'    ]
+        fields = ['id', 'title', 'slug', 'author', 'image', 'content', 'published_date', 'comments','key_takeaways', 'images', 'related_posts'    ]
