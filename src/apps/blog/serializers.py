@@ -1,3 +1,4 @@
+import math
 from rest_framework import serializers
 from .models import BlogPost, Comment, BlogStatus
 
@@ -25,6 +26,10 @@ class BlogPostDetailSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     def get_comments(self, obj):
         return CommentSerializer(obj.comments.filter(is_active=True), many=True).data
+    read_time = serializers.SerializerMethodField()
+    def get_read_time(self, obj):
+        words = len(obj.content.split())
+        return math.ceil(words / 200)
     related_posts = serializers.SerializerMethodField()
 
     def get_related_posts(self, obj):
