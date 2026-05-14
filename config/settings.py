@@ -98,11 +98,13 @@ DATABASES = {
 }
 
 # ── 8. CORS ───────────────────────────────────────────────────────────
-CORS_ALLOWED_ORIGINS = [
-    "https://viotechtechnology.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:5173",
-]
+CORS_ALLOWED_ORIGINS = env.list(
+    "CORS_ALLOWED_ORIGINS",
+    default=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+    ] # type: ignore
+)
 
 # ── 9. Auth ───────────────────────────────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [
