@@ -195,30 +195,28 @@ class EventRegistrationSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['status', 'registration_date', 'confirmation_code']
 
+    
     def validate(self, data):
-        event = data.get('event')
+        # FIXED: Safely grab the event during a partial PATCH request
+        event = data.get('event', getattr(self.instance, 'event', None))
         
+        if not event:
+            return data
+            
         # Check if event registration is open
         if not event.is_registration_open:
-            raise serializers.ValidationError(
-                "Registration is closed for this event."
-            )
+            raise serializers.ValidationError("Registration is closed for this event.")
         
         # Check if event is full
         if event.is_full:
-            raise serializers.ValidationError(
-                "This event has reached maximum capacity."
-            )
+            raise serializers.ValidationError("This event has reached maximum capacity.")
         
-        # Check if email already registered
+        # Check if email already registered (only check if email is in data)
         email = data.get('email')
-        if EventRegistration.objects.filter(event=event, email=email).exists():
-            raise serializers.ValidationError(
-                "This email is already registered for this event."
-            )
+        if email and EventRegistration.objects.filter(event=event, email=email).exclude(id=getattr(self.instance, 'id', None)).exists():
+            raise serializers.ValidationError("This email is already registered for this event.")
         
         return data
-
 
 class EventRegistrationListSerializer(serializers.ModelSerializer):
     event = EventListSerializer(read_only=True)

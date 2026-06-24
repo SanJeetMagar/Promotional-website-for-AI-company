@@ -28,6 +28,6 @@ urlpatterns = [
     
     # FIXED: Uncommented these so they register successfully
     path('v1/api/inquiry/', include('src.apps.inquiry.urls')),
-    path('v1/api/portfolio/', include('src.apps.portfolio.urls')),
+    # path('v1/api/portfolio/', include('src.apps.portfolio.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
