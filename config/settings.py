@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     "src.apps.about",
     "src.apps.product",
     "src.apps.faq",
-    "src.apps.gallery",   # WHY: it was missing entirely
+    "src.apps.gallery",  
+    "src.apps.events" # WHY: it was missing entirely
 ]
 
 # ── 5. Middleware ─────────────────────────────────────────────────────
