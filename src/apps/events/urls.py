@@ -24,8 +24,8 @@ urlpatterns = [
     path('', EventListView.as_view(), name='event-list'),
     path('create/', EventCreateView.as_view(), name='event-create'),
     path('<slug:slug>/', EventDetailView.as_view(), name='event-detail'),
-    path('/update/', EventUpdateView.as_view(), name='event-update'),
-    path('/delete/', EventDeleteView.as_view(), name='event-delete'),
+    path('update/', EventUpdateView.as_view(), name='event-update'),
+    path('delete/', EventDeleteView.as_view(), name='event-delete'),
     
     # Speaker URLs
     path('speakers/', SpeakerListView.as_view(), name='speaker-list'),
