@@ -8,7 +8,7 @@ from .models import Newsletter
 def send_welcome_email(email):
     """Send welcome email to new newsletter subscriber"""
     try:
-        subject = "Welcome to VioTech Newsletter!"
+        subject = "Welcome to AI website Newsletter!"
         message = f"""
         Hello,
         
@@ -16,7 +16,7 @@ def send_welcome_email(email):
         updates, insights, and exclusive content with you.
         
         Best regards,
-        VioTech Technology Team
+        AI website Team
         """
         send_mail(
             subject,

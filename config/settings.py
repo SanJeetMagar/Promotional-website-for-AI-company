@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "django_filters",
     "drf_spectacular",
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     "src.apps.about",
     "src.apps.product",
     "src.apps.faq",
+    "src.apps.gallery",   # WHY: it was missing entirely
 ]
 
 # ── 5. Middleware ─────────────────────────────────────────────────────
@@ -64,6 +66,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 ROOT_URLCONF = "config.urls"
 
@@ -137,9 +140,8 @@ REST_FRAMEWORK = {
 }
 
 # ── 11. Celery ────────────────────────────────────────────────────────
-CELERY_BROKER_URL = env("REDIS_URL")
-CELERY_RESULT_BACKEND = env("REDIS_URL")
-
+CELERY_BROKER_URL = env("REDIS_URL", default="redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = env("REDIS_URL", default="redis://localhost:6379/0")
 # ── 12. Internationalisation ──────────────────────────────────────────
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
@@ -157,7 +159,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # ── 14. Spectacular ───────────────────────────────────────────────────
 SPECTACULAR_SETTINGS = {
-    "TITLE": "VioTech Technology Backend",
+    "TITLE": "Promotional website Backend",
     "DESCRIPTION": "API for VioTech Backend service",
     "VERSION": "1.0.0",
     "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
@@ -188,3 +190,12 @@ SERVER_EMAIL       = str(env("SERVER_EMAIL",        default=DEFAULT_FROM_EMAIL))
 CONTACT_ADMIN_EMAIL = str(env("CONTACT_ADMIN_EMAIL", default="admin@localhost"))
 # Who receives Django's automatic crash alert emails
 ADMINS = [("SanJeet", env("ADMIN_EMAIL", default="admin@localhost"))]
+
+from datetime import timedelta
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,  # WHY: this is what makes logout actually work
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}

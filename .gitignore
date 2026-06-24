@@ -221,3 +221,5 @@ __marimo__/
 .env
 staticfiles/
 CONTACT_EMAIL_RATELIMIT_GUIDE.md
+
+repomix-output.xml

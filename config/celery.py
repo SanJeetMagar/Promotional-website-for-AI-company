@@ -1,5 +1,4 @@
 import os
-import django
 
 from celery import Celery
 
@@ -12,6 +11,4 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 def debug_task(self):
     print(f'Request: {self.request!r}')
 
-# Setup Django before autodiscovering tasks
-django.setup()
 app.autodiscover_tasks()
