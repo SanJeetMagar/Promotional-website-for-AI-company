@@ -106,35 +106,35 @@ class BlogPostCreateUpdateSerializer(serializers.ModelSerializer):
         read_only_fields = ['slug']
 
     def create(self, validated_data):
-        key_takeaways_data = validated_data.pop('key_takeaways', [])
-        tags_data = validated_data.pop('tags', [])
-        
-        blog_post = BlogPost.objects.create(**validated_data)
-        
-        if tags_data:
-            blog_post.tags.set(tags_data)
-        
-        for takeaway_data in key_takeaways_data:
-            KeyTakeaway.objects.create(blog_post=blog_post, **takeaway_data)
-        
-        return blog_post
+            key_takeaways_data = validated_data.pop('key_takeaways', [])
+            tags_data = validated_data.pop('tags', [])
+            
+            blog_post = BlogPost.objects.create(**validated_data)
+            
+            if tags_data:
+                blog_post.tags.set(tags_data)
+            
+            # FIXED: Added (or []) safety catch
+            for takeaway_data in (key_takeaways_data or []):
+                KeyTakeaway.objects.create(blog_post=blog_post, **takeaway_data)
+            
+            return blog_post
 
-    def update(self, instance, validated_data):
-        key_takeaways_data = validated_data.pop('key_takeaways', None)
-        tags_data = validated_data.pop('tags', None)
-        
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-        
-        if tags_data is not None:
-            instance.tags.set(tags_data)
-        
-        if key_takeaways_data is not None:
-            # Remove old takeaways
-            instance.key_takeaways.all().delete()
-            # Create new ones
-            for takeaway_data in key_takeaways_data:
-                KeyTakeaway.objects.create(blog_post=instance, **takeaway_data)
-        
-        return instance
+        def update(self, instance, validated_data):
+            key_takeaways_data = validated_data.pop('key_takeaways', None)
+            tags_data = validated_data.pop('tags', None)
+            
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
+            instance.save()
+            
+            if tags_data is not None:
+                instance.tags.set(tags_data)
+            
+            if key_takeaways_data is not None:
+                instance.key_takeaways.all().delete()
+                # FIXED: Added (or []) safety catch
+                for takeaway_data in (key_takeaways_data or []):
+                    KeyTakeaway.objects.create(blog_post=instance, **takeaway_data)
+            
+            return instance
