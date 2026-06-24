@@ -41,8 +41,6 @@ class PricingPlanSerializer(serializers.ModelSerializer):
         ]
 
 
-# Writable version — pricing_features must NOT be read_only here
-# or it won't appear in validated_data during create/update
 class PricingPlanWriteSerializer(serializers.ModelSerializer):
     pricing_features = PricingPlanFeatureSerializer(many=True, required=False)
 
@@ -101,7 +99,7 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, required=False)
     features = ProductFeatureSerializer(many=True, required=False)
     steps = ProductStepSerializer(many=True, required=False)
-    pricing_plans = PricingPlanWriteSerializer(many=True, required=False)  # writable version
+    pricing_plans = PricingPlanWriteSerializer(many=True, required=False) 
     faqs = ProductFAQSerializer(many=True, required=False)
     testimonials = ProductTestimonialSerializer(many=True, required=False)
 
@@ -138,7 +136,8 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
             plan_features_data = plan_data.pop('pricing_features', [])
             plan = PricingPlan.objects.create(product=product, **plan_data)
             for pf_data in plan_features_data:
-                PricingPlanFeature.objects.create(plan=plan, **pf_data)
+                # Fixed bug: The model field is 'pricing_plan', not 'plan'
+                PricingPlanFeature.objects.create(pricing_plan=plan, **pf_data)
 
         for data in faqs_data:
             ProductFAQ.objects.create(product=product, **data)
@@ -161,8 +160,6 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
 
-        # None means "not sent in request, don't touch it"
-        # [] means "sent but empty, wipe existing"
         if images_data is not None:
             instance.images.all().delete()
             for data in images_data:
@@ -184,7 +181,8 @@ class ProductCreateUpdateSerializer(serializers.ModelSerializer):
                 plan_features_data = plan_data.pop('pricing_features', [])
                 plan = PricingPlan.objects.create(product=instance, **plan_data)
                 for pf_data in plan_features_data:
-                    PricingPlanFeature.objects.create(plan=plan, **pf_data)
+                    # Fixed bug: The model field is 'pricing_plan', not 'plan'
+                    PricingPlanFeature.objects.create(pricing_plan=plan, **pf_data)
 
         if faqs_data is not None:
             instance.faqs.all().delete()
