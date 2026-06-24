@@ -20,8 +20,11 @@ class Inquiry(BaseModel):
     company_name = models.CharField(max_length=255, blank=True)
     
     # Optional link to a specific product they are asking about
+    # Change this specific field in your models.py:
+
+    # Optional link to a specific product they are asking about
     product = models.ForeignKey(
-        'Product', 
+        'product.Product',       # <--- FIXED: Added 'product.' app prefix
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True, 
