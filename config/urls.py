@@ -34,6 +34,8 @@ urlpatterns = [
     path('v1/api/blog/', include('src.apps.blog.urls')),    
     path('v1/api/inquiry/', include('src.apps.inquiry.urls')),
     path('v1/api/events/', include('src.apps.events.urls')),
+    path('v1/api/gallery/', include('src.apps.gallery.urls')),
+    
     # path('v1/api/portfolio/', include('src.apps.portfolio.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
