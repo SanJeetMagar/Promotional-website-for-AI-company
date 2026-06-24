@@ -19,10 +19,13 @@ class NewsletterCreateView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     
     def perform_create(self, serializer):
-        """
-        Override perform_create to trigger welcome email task
-        after newsletter subscription is created.
-        """
         instance = serializer.save()
-        # Send welcome email asynchronously using Celery
-        send_welcome_email.delay(instance.email) 
+        
+        # FIXED: Try Celery first, fallback to Sync, ignore if both fail (prevents 500 error)
+        try:
+            send_welcome_email.delay(instance.email)
+        except Exception:
+            try:
+                send_welcome_email(instance.email)
+            except Exception:
+                pass
