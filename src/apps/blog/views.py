@@ -2,7 +2,7 @@ from rest_framework import generics, status, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, Count, Prefetch
 from drf_spectacular.utils import extend_schema, OpenApiParameter
@@ -13,6 +13,7 @@ from .serializers import (
     BlogPostListSerializer,
     BlogPostDetailSerializer,
     BlogPostCreateUpdateSerializer,
+    BlogPostCoverImageSerializer,
     CommentSerializer,
     TagSerializer,
     BlogImageSerializer
@@ -44,12 +45,10 @@ class BlogPostListView(generics.ListAPIView):
             'tags',
             Prefetch('comments', queryset=Comment.objects.filter(is_active=True))
         )
-        
-        # Only show published posts to non-admin users
+
         if not self.request.user.is_staff:
             queryset = queryset.filter(status=BlogStatus.PUBLISHED)
-        
-        # Search functionality
+
         search_query = self.request.query_params.get('search', None)
         if search_query:
             queryset = queryset.filter(
@@ -58,29 +57,25 @@ class BlogPostListView(generics.ListAPIView):
                 Q(author__icontains=search_query) |
                 Q(tags__name__icontains=search_query)
             ).distinct()
-        
-        # Filter by tag
+
         tag_slug = self.request.query_params.get('tag', None)
         if tag_slug:
             queryset = queryset.filter(tags__slug=tag_slug)
-        
-        # Filter by status (admin only)
+
         status_filter = self.request.query_params.get('status', None)
         if status_filter and self.request.user.is_staff:
             queryset = queryset.filter(status=status_filter)
-        
-        # Filter featured posts
+
         featured = self.request.query_params.get('featured', None)
         if featured is not None:
             is_featured = featured.lower() == 'true'
             queryset = queryset.filter(is_featured=is_featured)
-        
+
         return queryset
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        
-        # Get featured and latest posts for homepage
+
         if not request.query_params:
             featured_posts = queryset.filter(
                 is_featured=True,
@@ -90,13 +85,12 @@ class BlogPostListView(generics.ListAPIView):
                 is_featured=False,
                 status=BlogStatus.PUBLISHED
             )[:10]
-            
+
             return Response({
                 'featured': self.get_serializer(featured_posts, many=True).data,
                 'latest': self.get_serializer(latest_posts, many=True).data
             })
-        
-        # Default list behavior
+
         return super().list(request, *args, **kwargs)
 
 
@@ -113,15 +107,14 @@ class BlogPostDetailView(generics.RetrieveAPIView):
             'key_takeaways',
             'images'
         )
-        
+
         if not self.request.user.is_staff:
             queryset = queryset.filter(status=BlogStatus.PUBLISHED)
-        
+
         return queryset
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        # Increment view count
         instance.increment_view_count()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
@@ -129,19 +122,35 @@ class BlogPostDetailView(generics.RetrieveAPIView):
 
 @extend_schema(tags=['Blog Posts'], summary="Create a new blog post")
 class BlogPostCreateView(generics.CreateAPIView):
+    """
+    CHANGED: JSON-only now. tags / key_takeaways are plain JSON arrays.
+    Cover image is set afterward via POST .../image/.
+    """
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostCreateUpdateSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = [JSONParser]
 
 
 @extend_schema(tags=['Blog Posts'], summary="Update a blog post")
 class BlogPostUpdateView(generics.UpdateAPIView):
+    """CHANGED: JSON-only, same reasoning as create view above."""
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostCreateUpdateSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
     lookup_field = 'slug'
+    parser_classes = [JSONParser]
+
+
+@extend_schema(tags=['Blog Posts'], summary="Set or replace a blog post's cover image")
+class BlogPostCoverImageView(generics.UpdateAPIView):
+    """NEW: dedicated multipart endpoint, just for the cover image."""
+    queryset = BlogPost.objects.all()
+    serializer_class = BlogPostCoverImageSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+    lookup_field = 'slug'
     parser_classes = [MultiPartParser, FormParser]
+    http_method_names = ['patch']
 
 
 @extend_schema(tags=['Blog Posts'], summary="Delete a blog post")
@@ -185,7 +194,7 @@ class CommentListView(generics.ListAPIView):
         return Comment.objects.filter(
             blog_post__slug=slug,
             is_active=True,
-            parent__isnull=True  # Only top-level comments
+            parent__isnull=True
         ).prefetch_related('replies')
 
 
@@ -250,7 +259,7 @@ class TagDeleteView(generics.DestroyAPIView):
     lookup_field = 'slug'
 
 
-# ============== Blog Image Views ==============
+# ============== Blog Image Views (gallery images, unrelated to cover image) ==============
 
 @extend_schema(tags=['Blog Images'], summary="Upload images to a blog post")
 class BlogImageCreateView(generics.CreateAPIView):
