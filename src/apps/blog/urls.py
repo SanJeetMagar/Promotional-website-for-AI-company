@@ -2,9 +2,10 @@ from django.urls import path
 from .views import (
     BlogPostListView, BlogPostDetailView, BlogPostCreateView,
     BlogPostUpdateView, BlogPostDeleteView, BlogPostPublishView,
-    BlogPostArchiveView, CommentListView, CommentCreateView,
-    CommentUpdateView, CommentDeleteView, TagListView, TagCreateView,
-    TagUpdateView, TagDeleteView, BlogImageCreateView, BlogImageDeleteView,
+    BlogPostArchiveView, BlogPostCoverImageView, CommentListView,
+    CommentCreateView, CommentUpdateView, CommentDeleteView,
+    TagListView, TagCreateView, TagUpdateView, TagDeleteView,
+    BlogImageCreateView, BlogImageDeleteView,
 )
 
 app_name = 'blog'
@@ -18,6 +19,7 @@ urlpatterns = [
     path('posts/<slug:slug>/delete/', BlogPostDeleteView.as_view(), name='post-delete'),
     path('posts/<slug:slug>/publish/', BlogPostPublishView.as_view(), name='post-publish'),
     path('posts/<slug:slug>/archive/', BlogPostArchiveView.as_view(), name='post-archive'),
+    path('posts/<slug:slug>/image/', BlogPostCoverImageView.as_view(), name='post-cover-image'),  # NEW
 
     # Comment URLs
     path('posts/<slug:slug>/comments/', CommentListView.as_view(), name='comment-list'),
@@ -31,7 +33,7 @@ urlpatterns = [
     path('tags/<slug:slug>/update/', TagUpdateView.as_view(), name='tag-update'),
     path('tags/<slug:slug>/delete/', TagDeleteView.as_view(), name='tag-delete'),
 
-    # Image URLs
+    # Image URLs (gallery images)
     path('posts/<slug:slug>/images/upload/', BlogImageCreateView.as_view(), name='image-upload'),
     path('images/<int:pk>/delete/', BlogImageDeleteView.as_view(), name='image-delete'),
 ]
