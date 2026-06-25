@@ -2,6 +2,8 @@ import math
 from rest_framework import serializers
 from .models import BlogPost, Comment, BlogStatus, KeyTakeaway, BlogImage, Tag
 
+MAX_ORDER_VALUE = 9999  # sane upper bound so Swagger/forms don't show SQLite's int64 max
+
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,12 +16,14 @@ class KeyTakeawaySerializer(serializers.ModelSerializer):
     class Meta:
         model = KeyTakeaway
         fields = ['id', 'content', 'order']
+        extra_kwargs = {'order': {'max_value': MAX_ORDER_VALUE}}
 
 
 class BlogImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogImage
         fields = ['id', 'caption', 'image', 'order']
+        extra_kwargs = {'order': {'max_value': MAX_ORDER_VALUE}}
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -88,6 +92,11 @@ class BlogPostDetailSerializer(serializers.ModelSerializer):
 
 
 class BlogPostCreateUpdateSerializer(serializers.ModelSerializer):
+    """
+    Used for create/update. Pure JSON body now — no file field here.
+    `image` is read-only so it shows up in responses but is set via
+    the dedicated BlogPostCoverImageView (multipart) instead.
+    """
     tags = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=Tag.objects.all(),
@@ -95,6 +104,7 @@ class BlogPostCreateUpdateSerializer(serializers.ModelSerializer):
     )
     key_takeaways = KeyTakeawaySerializer(many=True, required=False)
     images = BlogImageSerializer(many=True, required=False, read_only=True)
+    image = serializers.ImageField(read_only=True)  # CHANGED: set via cover-image endpoint, not here
 
     class Meta:
         model = BlogPost
@@ -104,37 +114,43 @@ class BlogPostCreateUpdateSerializer(serializers.ModelSerializer):
             'key_takeaways', 'images', 'meta_description', 'meta_keywords'
         ]
         read_only_fields = ['slug']
+        extra_kwargs = {'order': {'max_value': MAX_ORDER_VALUE}}
 
     def create(self, validated_data):
-            key_takeaways_data = validated_data.pop('key_takeaways', [])
-            tags_data = validated_data.pop('tags', [])
-            
-            blog_post = BlogPost.objects.create(**validated_data)
-            
-            if tags_data:
-                blog_post.tags.set(tags_data)
-            
-            # FIXED: Added (or []) safety catch
-            for takeaway_data in (key_takeaways_data or []):
-                KeyTakeaway.objects.create(blog_post=blog_post, **takeaway_data)
-            
-            return blog_post
+        key_takeaways_data = validated_data.pop('key_takeaways', [])
+        tags_data = validated_data.pop('tags', [])
+
+        blog_post = BlogPost.objects.create(**validated_data)
+
+        if tags_data:
+            blog_post.tags.set(tags_data)
+
+        for takeaway_data in (key_takeaways_data or []):
+            KeyTakeaway.objects.create(blog_post=blog_post, **takeaway_data)
+
+        return blog_post
 
     def update(self, instance, validated_data):
         key_takeaways_data = validated_data.pop('key_takeaways', None)
         tags_data = validated_data.pop('tags', None)
-        
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
-        
+
         if tags_data is not None:
             instance.tags.set(tags_data)
-        
+
         if key_takeaways_data is not None:
             instance.key_takeaways.all().delete()
-            # FIXED: Added (or []) safety catch
             for takeaway_data in (key_takeaways_data or []):
                 KeyTakeaway.objects.create(blog_post=instance, **takeaway_data)
-        
+
         return instance
+
+
+class BlogPostCoverImageSerializer(serializers.ModelSerializer):
+    """NEW: tiny dedicated serializer just for setting the cover image (multipart)."""
+    class Meta:
+        model = BlogPost
+        fields = ['id', 'image']

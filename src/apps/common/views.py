@@ -12,7 +12,9 @@ from src.apps.blog.models import BlogPost, BlogStatus
 from src.apps.events.models import Event, EventRegistration, EventStatus
 from src.apps.career.models import JobPosting, CV
 from src.apps.product.models import Product
+from drf_spectacular.utils import extend_schema
 
+@extend_schema(tags=['Admin Analytics'], summary="Get aggregated statistics for the admin dashboard")
 class AdminDashboardAnalyticsView(APIView):
     """
     Provides aggregated statistics for the Custom Admin Dashboard home screen.
